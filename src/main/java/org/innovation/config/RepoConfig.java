@@ -1,9 +1,12 @@
 package org.innovation.config;
 
+import lombok.Getter;
+
+@Getter
 public class RepoConfig {
-    public String name;
-    public String url;
-    public String localDir;
+    private final String name;
+    private final String url;
+    private final String localDir;
 
     public RepoConfig(String name, String url) {
         this.name = name;

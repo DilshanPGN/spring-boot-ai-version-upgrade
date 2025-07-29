@@ -1,25 +1,23 @@
 package org.innovation;
 
 import org.innovation.config.RepoConfig;
-import org.innovation.service.CatalogLoader;
-import org.innovation.service.GitHandler;
-import org.innovation.service.GitHubPRService;
-import org.innovation.service.OpenRewriteRunner;
-
-import java.util.List;
+import org.innovation.util.CatalogLoaderUtil;
+import org.innovation.service.GitHandlerService;
+import org.innovation.util.GitHubPRUtil;
+import org.innovation.util.OpenRewriteRunnerUtil;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        List<RepoConfig> repos = CatalogLoader.loadCatalog("catalog.yml");
+        var repos = CatalogLoaderUtil.loadCatalog("catalog.yml");
         for (RepoConfig repo : repos) {
-            GitHandler git = new GitHandler(repo);
+            var git = new GitHandlerService(repo);
             git.cloneRepo();
             git.checkoutAndCreateBranchFrom("develop", "upgrade-springboot-java");
 
-            OpenRewriteRunner.runRewrite(repo);
+            OpenRewriteRunnerUtil.runRewrite(repo);
 
             git.commitAndPushChanges();
-            GitHubPRService.createPullRequest(repo);
+            GitHubPRUtil.createPullRequest(repo);
         }
     }
 }

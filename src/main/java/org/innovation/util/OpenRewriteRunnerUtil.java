@@ -1,7 +1,7 @@
 package org.innovation.util;
 
 import lombok.experimental.UtilityClass;
-import org.innovation.JavaVersionInfo;
+import org.innovation.dto.JavaVersionInfo;
 import org.innovation.config.RepoConfig;
 import org.innovation.exception.OpenRewriteRunnerException;
 

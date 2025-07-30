@@ -31,9 +31,21 @@ public class GitHandlerService {
             log.info("Cloned repository: {}", repo.getName());
         }
     }
+    public void deleteLocalBranchIfExists(String branchName) throws IOException, GitAPIException {
+        try (var git = Git.open(new File(repo.getLocalDir()))) {
+            var branchList = git.branchList().call();
+            var exists = branchList.stream().anyMatch(ref -> ref.getName().endsWith("/" + branchName));
+            if (exists) {
+                git.branchDelete()
+                        .setBranchNames(branchName)
+                        .setForce(true)
+                        .call();
+            }
+        }
+    }
 
     public void checkoutAndCreateBranchFrom(String baseBranch, String newBranch) throws Exception {
-        try (Git git = Git.open(new File(repo.getLocalDir()))) {
+        try (var git = Git.open(new File(repo.getLocalDir()))) {
 
             log.debug("Fetching remote branches for repository: {}", repo.getName());
             git.fetch()

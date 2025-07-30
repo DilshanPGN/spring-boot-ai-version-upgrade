@@ -31,6 +31,8 @@ public class OpenRewriteRunnerUtil {
     private static final String MVN_CMD = System.getProperty("os.name").toLowerCase().contains("win") ? "mvn.cmd" : "mvn";
     private static final String ENV_JAVA_HOME = "JAVA_HOME";
     private static final String ENV_PATH = "PATH";
+    private static final String REWRITE_PLUGIN_START = "<!--OpenReWrite Plugin Start-->";
+    private static final String REWRITE_PLUGIN_END = "<!--OpenReWrite Plugin END-->";
 
     public static void runRewrite(RepoConfig repo) throws IOException, InterruptedException {
         var pomPath = Path.of(repo.getLocalDir(), POM_XML);
@@ -70,8 +72,26 @@ public class OpenRewriteRunnerUtil {
         if (p.waitFor() != 0) {
             throw new OpenRewriteRunnerException("OpenRewrite failed for " + repo.getName() + " using Java " + javaVersionInfo.version());
         }
-    }
 
+        // Remove OpenReWrite plugin block (with comments) from pom.xml
+        var pomLines = Files.readAllLines(pomPath);
+        var cleanedLines = new java.util.ArrayList<String>();
+        var inBlock = false;
+        for (var line : pomLines) {
+            if (line.contains(REWRITE_PLUGIN_START)) {
+                inBlock = true;
+                continue;
+            }
+            if (inBlock && line.contains(REWRITE_PLUGIN_END)) {
+                inBlock = false;
+                continue;
+            }
+            if (!inBlock) {
+                cleanedLines.add(line);
+            }
+        }
+        Files.write(pomPath, cleanedLines);
+    }
 
     private static JavaVersionInfo getJavaVersionInfoFromPom(List<String> lines) {
         var javaVersion = DEFAULT_JAVA_VERSION;

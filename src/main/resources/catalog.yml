@@ -1,3 +1,5 @@
 repositories:
-  - name: spring-reddit-clone-1
-    url: https://github.com/DilshanPGN/spring-reddit-clone-1
+  - name: spring-openrewrite-sample-project-1
+    url: https://github.com/DilshanPGN/spring-openrewrite-sample-project-1
+  - name: spring-openrewrite-sample-project-2
+    url: https://github.com/DilshanPGN/spring-openrewrite-sample-project-2

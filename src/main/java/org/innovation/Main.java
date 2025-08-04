@@ -1,6 +1,5 @@
 package org.innovation;
 
-import org.innovation.config.RepoConfig;
 import org.innovation.util.CatalogLoaderUtil;
 import org.innovation.service.GitHandlerService;
 import org.innovation.util.GitHubPRUtil;
@@ -14,7 +13,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         var repos = CatalogLoaderUtil.loadCatalog("catalog.yml");
-        for (RepoConfig repo : repos) {
+        for (var repo : repos) {
             var git = new GitHandlerService(repo);
             git.cloneRepo();
             git.deleteLocalBranchIfExists(NEW_BRANCH_NAME);
